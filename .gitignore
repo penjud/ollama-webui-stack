@@ -1,0 +1,28 @@
+# Data directories
+data/
+ollama-data/
+searxng-data/
+backups/
+
+# Environment files with secrets
+.env
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (if any)
+node_modules/

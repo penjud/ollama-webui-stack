@@ -1,0 +1,54 @@
+version: '3'
+services:
+  # Ollama service for running models
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama-data:/root/.ollama
+    # GPU support configuration
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, utility]
+  
+  # Open WebUI 
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"  # Adjust port as needed
+    volumes:
+      - ./data:/app/backend/data
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama:11434/api
+    depends_on:
+      - ollama
+    # GPU support configuration
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, utility]
+              
+  # SearXNG for web search capabilities
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./searxng-data:/etc/searxng
+    environment:
+      - BASE_URL=http://localhost:8080/
+      - INSTANCE_NAME=open-webui-searxng
