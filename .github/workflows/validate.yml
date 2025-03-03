@@ -1,0 +1,23 @@
+name: Validate Configuration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Validate docker-compose.yml
+        run: docker-compose -f docker-compose.yml config
+      
+      - name: Check shell scripts
+        run: |
+          for file in $(find ./scripts -name "*.sh"); do
+            echo "Checking $file"
+            bash -n "$file"
+          done

@@ -1,0 +1,32 @@
+version: '3'
+services:
+  # Example override for Ollama
+  ollama:
+    # Set specific resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        # Uncomment to disable GPU
+        # reservations:
+        #  devices: []
+    # Example of adding environment variables
+    environment:
+      - OLLAMA_DEBUG=1
+      
+  # Example override for Open WebUI
+  open-webui:
+    # Change port mapping example
+    ports:
+      - "8888:8080"  # Changed from 3000:8080
+    # Add custom environment variables
+    environment:
+      - OLLAMA_API_BASE_URL=http://ollama:11434/api
+      - WEBUI_SECRET_KEY=your-custom-secret-key
+      
+  # Example override for SearXNG
+  searxng:
+    # Add a custom volume for configuration
+    volumes:
+      - ./custom-searxng-config:/etc/searxng:ro
+      - ./searxng-data:/etc/searxng
